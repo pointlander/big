@@ -6,6 +6,8 @@ package big
 
 import (
 	"math/big"
+
+	"github.com/ALTree/bigfloat"
 )
 
 // Imaginary is an imaginary number
@@ -19,6 +21,15 @@ func NewImaginary(a, b *big.Float) *Imaginary {
 		a: a,
 		b: b,
 	}
+}
+
+// Abs computes the absolute value of a
+func (i *Imaginary) Abs(a *Imaginary) *Imaginary {
+	i.a.Mul(a.a, a.a)
+	i.b.Mul(a.b, a.b)
+	i.a = bigfloat.Sqrt(i.a.Add(i.a, i.b))
+	i.b = big.NewFloat(0)
+	return i
 }
 
 // Add add two imaginary numbers
