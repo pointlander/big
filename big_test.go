@@ -10,7 +10,7 @@ import (
 )
 
 func TestAbs(t *testing.T) {
-	a := NewImaginary(big.NewFloat(5), big.NewFloat(5))
+	a := NewFloat(big.NewFloat(5), big.NewFloat(5))
 	a.Abs(a)
 	t.Log(a.String())
 	if a.String() != "7.071067812 + 0i" {
@@ -18,12 +18,22 @@ func TestAbs(t *testing.T) {
 	}
 }
 
-func TestDiv(t *testing.T) {
-	a := NewImaginary(big.NewFloat(4), big.NewFloat(5))
-	b := NewImaginary(big.NewFloat(2), big.NewFloat(6))
+func TestImaginary_Div(t *testing.T) {
+	a := NewFloat(big.NewFloat(4), big.NewFloat(5))
+	b := NewFloat(big.NewFloat(2), big.NewFloat(6))
 	a.Div(a, b)
 	t.Log(a.String())
 	if a.String() != "0.95 + -0.35i" {
+		t.Fatal("invalid result")
+	}
+}
+
+func TestRational_Div(t *testing.T) {
+	a := NewRational(big.NewRat(4, 1), big.NewRat(5, 1))
+	b := NewRational(big.NewRat(2, 1), big.NewRat(6, 1))
+	a.Div(a, b)
+	t.Log(a.String())
+	if a.String() != "19/20 + -7/20i" {
 		t.Fatal("invalid result")
 	}
 }
