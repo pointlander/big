@@ -28,6 +28,15 @@ func TestImaginary_Div(t *testing.T) {
 	}
 }
 
+func TestImaginary_Sqrt(t *testing.T) {
+	a := NewFloat(big.NewFloat(5), big.NewFloat(12))
+	a.Sqrt(a)
+	t.Log(a.String())
+	if a.String() != "3 + 2i" {
+		t.Fatal("invalid result")
+	}
+}
+
 func TestRational_Div(t *testing.T) {
 	a := NewRational(big.NewRat(4, 1), big.NewRat(5, 1))
 	b := NewRational(big.NewRat(2, 1), big.NewRat(6, 1))

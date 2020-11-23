@@ -80,6 +80,30 @@ func (f *Float) Div(a, b *Float) *Float {
 	return f
 }
 
+// Sqrt computes the square root of the complex number
+func (f *Float) Sqrt(a *Float) *Float {
+	x := big.NewFloat(0).SetPrec(f.a.Prec())
+	y := big.NewFloat(0).SetPrec(f.b.Prec())
+	l := big.NewFloat(0).SetPrec(f.a.Prec())
+	x.Mul(a.a, a.a)
+	y.Mul(a.b, a.b)
+	l.Add(x, y)
+	l = bigfloat.Sqrt(l)
+
+	aa := big.NewFloat(0).SetPrec(f.a.Prec())
+	aa.Add(l, a.a)
+	aa.Quo(aa, big.NewFloat(2).SetPrec(f.a.Prec()))
+	aa = bigfloat.Sqrt(aa)
+
+	f.b.Sub(l, a.a)
+	f.b.Quo(f.b, big.NewFloat(2).SetPrec(f.b.Prec()))
+	f.b = bigfloat.Sqrt(f.b)
+	f.b.Mul(big.NewFloat(float64(a.b.Sign())).SetPrec(f.b.Prec()), f.b)
+	f.a = aa
+
+	return f
+}
+
 // String returns a string of the imaginary number
 func (f *Float) String() string {
 	return f.a.String() + " + " + f.b.String() + "i"
