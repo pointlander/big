@@ -81,6 +81,7 @@ func (f *Float) Div(a, b *Float) *Float {
 }
 
 // Sqrt computes the square root of the complex number
+// https://www.johndcook.com/blog/2020/06/09/complex-square-root/
 func (f *Float) Sqrt(a *Float) *Float {
 	x := big.NewFloat(0).SetPrec(f.a.Prec())
 	y := big.NewFloat(0).SetPrec(f.b.Prec())
