@@ -105,6 +105,54 @@ func (f *Float) Sqrt(a *Float) *Float {
 	return f
 }
 
+// Arg computes arg(x + yi) = tan-1(y/x)
+func (f *Float) Arg(x *Float) *Float {
+	a := x.a
+	b := x.b
+	f.b = big.NewFloat(0).SetPrec(b.Prec())
+
+	if a.Cmp(big.NewFloat(0).SetPrec(a.Prec())) == 0 {
+		if b.Cmp(big.NewFloat(0).SetPrec(a.Prec())) < 0 {
+			f.a.Set(bigfloat.PI(a.Prec()))
+			f.a.Quo(f.a, big.NewFloat(2).SetPrec(a.Prec()))
+			f.a.Neg(f.a)
+		} else if b.Cmp(big.NewFloat(0).SetPrec(a.Prec())) == 0 {
+			f.a.SetInf(false)
+		} else {
+			f.a.Set(bigfloat.PI(a.Prec()))
+			f.a.Quo(f.a, big.NewFloat(2).SetPrec(a.Prec()))
+		}
+
+		return f
+	}
+
+	if a.Cmp(big.NewFloat(1).SetPrec(a.Prec())) == 0 &&
+		b.Cmp(big.NewFloat(0).SetPrec(b.Prec())) == 0 {
+		f.a.Set(big.NewFloat(0).SetPrec(a.Prec()))
+	} else if a.Cmp(big.NewFloat(1).SetPrec(a.Prec())) == 0 &&
+		b.Cmp(big.NewFloat(1).SetPrec(b.Prec())) == 0 {
+		f.a.Set(bigfloat.PI(a.Prec()))
+		f.a.Quo(f.a, big.NewFloat(4).SetPrec(a.Prec()))
+	} else if a.Cmp(big.NewFloat(0).SetPrec(a.Prec())) == 0 &&
+		b.Cmp(big.NewFloat(1).SetPrec(b.Prec())) == 0 {
+		f.a.Set(bigfloat.PI(b.Prec()))
+		f.a.Quo(f.a, big.NewFloat(2).SetPrec(b.Prec()))
+	} else if a.Cmp(big.NewFloat(-1).SetPrec(a.Prec())) == 0 &&
+		b.Cmp(big.NewFloat(0).SetPrec(b.Prec())) == 0 {
+		f.a.Set(bigfloat.PI(a.Prec()))
+	} else if a.Cmp(big.NewFloat(0).SetPrec(a.Prec())) == 0 &&
+		b.Cmp(big.NewFloat(-1).SetPrec(b.Prec())) == 0 {
+		f.a.Set(bigfloat.PI(b.Prec()))
+		f.a.Quo(f.a, big.NewFloat(2).SetPrec(b.Prec()))
+		f.a.Neg(f.a)
+	} else {
+		f.a.Quo(b, a)
+		f.a = bigfloat.Arctan(f.a)
+	}
+
+	return f
+}
+
 // Pow computes x**y
 func (f *Float) Pow(x *Float, y *Float) *Float {
 	a := big.NewFloat(0).SetPrec(x.a.Prec())
@@ -124,24 +172,17 @@ func (f *Float) Pow(x *Float, y *Float) *Float {
 	e := bigfloat.Pow(sum, cc)
 	d := big.NewFloat(0).SetPrec(y.b.Prec())
 	d.Set(y.b)
-	arg := big.NewFloat(0).SetPrec(d.Prec())
-	arg.Quo(b, a)
-	if a.Cmp(big.NewFloat(1).SetPrec(a.Prec())) == 0 &&
-		b.Cmp(big.NewFloat(1).SetPrec(b.Prec())) == 0 {
-		arg = big.NewFloat(0).SetPrec(a.Prec())
-		arg.Set(bigfloat.PI(a.Prec()))
-		arg.Quo(arg, big.NewFloat(4).SetPrec(a.Prec()))
-	} else {
-		arg = bigfloat.Arctan(arg)
-	}
-	exp := big.NewFloat(0).SetPrec(arg.Prec())
-	exp.Mul(d, arg)
+	arg := NewFloat(big.NewFloat(0).SetPrec(a.Prec()),
+		big.NewFloat(0).SetPrec(b.Prec()))
+	arg.Arg(x)
+	exp := big.NewFloat(0).SetPrec(arg.a.Prec())
+	exp.Mul(d, arg.a)
 	exp.Neg(exp)
 	exp = bigfloat.Exp(exp)
 	e.Mul(e, exp)
 
 	i := big.NewFloat(0).SetPrec(c.Prec())
-	i.Mul(c, arg)
+	i.Mul(c, arg.a)
 	j := big.NewFloat(0).SetPrec(d.Prec())
 	j.Mul(d, bigfloat.Log(sum))
 	j.Quo(j, big.NewFloat(2).SetPrec(d.Prec()))
