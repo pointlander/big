@@ -46,6 +46,42 @@ func TestImaginary_Pow(t *testing.T) {
 	if c.String() != "-0.504824689 + 3.104144077i" {
 		t.Fatal("invalid result")
 	}
+
+	a = NewFloat(big.NewFloat(1).SetPrec(64), big.NewFloat(2).SetPrec(64))
+	b = NewFloat(big.NewFloat(1).SetPrec(64), big.NewFloat(2).SetPrec(64))
+	c = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
+	c.Pow(a, b)
+	t.Log(c.String())
+	if c.String() != "-0.2225171568 + 0.1007091311i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(1).SetPrec(64))
+	b = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(1).SetPrec(64))
+	c = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
+	c.Pow(a, b)
+	t.Log(c.String())
+	if c.String() != "0.2078795764 + 0i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(1).SetPrec(64), big.NewFloat(0).SetPrec(64))
+	b = NewFloat(big.NewFloat(1).SetPrec(64), big.NewFloat(0).SetPrec(64))
+	c = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
+	c.Pow(a, b)
+	t.Log(c.String())
+	if c.String() != "1 + 0i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
+	b = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
+	c = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
+	c.Pow(a, b)
+	t.Log(c.String())
+	if c.String() != "+Inf + 0i" {
+		t.Fatal("invalid result")
+	}
 }
 
 func TestRational_Div(t *testing.T) {

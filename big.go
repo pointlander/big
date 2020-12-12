@@ -157,6 +157,14 @@ func (f *Float) Arg(x *Float) *Float {
 // Pow computes x**y
 // https://mathworld.wolfram.com/ComplexExponentiation.html
 func (f *Float) Pow(x *Float, y *Float) *Float {
+	if x.a.Cmp(big.NewFloat(0).SetPrec(x.a.Prec())) == 0 &&
+		x.b.Cmp(big.NewFloat(0).SetPrec(x.b.Prec())) == 0 &&
+		y.a.Cmp(big.NewFloat(0).SetPrec(y.a.Prec())) == 0 &&
+		y.b.Cmp(big.NewFloat(0).SetPrec(y.b.Prec())) == 0 {
+		f.a.SetInf(false)
+		return f
+	}
+
 	a := big.NewFloat(0).SetPrec(x.a.Prec())
 	a.Set(x.a)
 	aa := big.NewFloat(0).SetPrec(x.a.Prec())
