@@ -37,6 +37,17 @@ func TestImaginary_Sqrt(t *testing.T) {
 	}
 }
 
+func TestImaginary_Pow(t *testing.T) {
+	a := NewFloat(big.NewFloat(2).SetPrec(64), big.NewFloat(1).SetPrec(64))
+	b := NewFloat(big.NewFloat(2).SetPrec(64), big.NewFloat(1).SetPrec(64))
+	c := NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
+	c.Pow(a, b)
+	t.Log(c.String())
+	if c.String() != "-0.504824689 + 3.104144077i" {
+		t.Fatal("invalid result")
+	}
+}
+
 func TestRational_Div(t *testing.T) {
 	a := NewRational(big.NewRat(4, 1), big.NewRat(5, 1))
 	b := NewRational(big.NewRat(2, 1), big.NewRat(6, 1))

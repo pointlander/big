@@ -105,6 +105,56 @@ func (f *Float) Sqrt(a *Float) *Float {
 	return f
 }
 
+// Pow computes x**y
+func (f *Float) Pow(x *Float, y *Float) *Float {
+	a := big.NewFloat(0).SetPrec(x.a.Prec())
+	a.Set(x.a)
+	aa := big.NewFloat(0).SetPrec(x.a.Prec())
+	aa.Mul(a, a)
+	b := big.NewFloat(0).SetPrec(x.b.Prec())
+	b.Set(x.b)
+	bb := big.NewFloat(0).SetPrec(x.b.Prec())
+	bb.Mul(b, b)
+	sum := big.NewFloat(0).SetPrec(x.a.Prec())
+	sum.Add(aa, bb)
+	c := big.NewFloat(0).SetPrec(y.a.Prec())
+	c.Set(y.a)
+	cc := big.NewFloat(0).SetPrec(c.Prec())
+	cc.Quo(c, big.NewFloat(2).SetPrec(c.Prec()))
+	e := bigfloat.Pow(sum, cc)
+	d := big.NewFloat(0).SetPrec(y.b.Prec())
+	d.Set(y.b)
+	arg := big.NewFloat(0).SetPrec(d.Prec())
+	arg.Quo(b, a)
+	if a.Cmp(big.NewFloat(1).SetPrec(a.Prec())) == 0 &&
+		b.Cmp(big.NewFloat(1).SetPrec(b.Prec())) == 0 {
+		arg = big.NewFloat(0).SetPrec(a.Prec())
+		arg.Set(bigfloat.PI(a.Prec()))
+		arg.Quo(arg, big.NewFloat(4).SetPrec(a.Prec()))
+	} else {
+		arg = bigfloat.Arctan(arg)
+	}
+	exp := big.NewFloat(0).SetPrec(arg.Prec())
+	exp.Mul(d, arg)
+	exp.Neg(exp)
+	exp = bigfloat.Exp(exp)
+	e.Mul(e, exp)
+
+	i := big.NewFloat(0).SetPrec(c.Prec())
+	i.Mul(c, arg)
+	j := big.NewFloat(0).SetPrec(d.Prec())
+	j.Mul(d, bigfloat.Log(sum))
+	j.Quo(j, big.NewFloat(2).SetPrec(d.Prec()))
+	i.Add(i, j)
+	cos := bigfloat.Cos(i)
+	cos.Mul(e, cos)
+	f.a.Set(cos)
+	sin := bigfloat.Sin(i)
+	sin.Mul(e, sin)
+	f.b.Set(sin)
+	return f
+}
+
 // String returns a string of the imaginary number
 func (f *Float) String() string {
 	return f.a.String() + " + " + f.b.String() + "i"
