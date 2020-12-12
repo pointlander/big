@@ -106,6 +106,7 @@ func (f *Float) Sqrt(a *Float) *Float {
 }
 
 // Arg computes arg(x + yi) = tan-1(y/x)
+// https://mathworld.wolfram.com/ComplexArgument.html
 func (f *Float) Arg(x *Float) *Float {
 	a := x.a
 	b := x.b
@@ -154,6 +155,7 @@ func (f *Float) Arg(x *Float) *Float {
 }
 
 // Pow computes x**y
+// https://mathworld.wolfram.com/ComplexExponentiation.html
 func (f *Float) Pow(x *Float, y *Float) *Float {
 	a := big.NewFloat(0).SetPrec(x.a.Prec())
 	a.Set(x.a)
