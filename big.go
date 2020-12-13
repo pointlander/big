@@ -105,6 +105,29 @@ func (f *Float) Sqrt(a *Float) *Float {
 	return f
 }
 
+// Atan2 computes atan2 of x
+// https://en.wikipedia.org/wiki/Atan2
+func (f *Float) Atan2(x *Float) *Float {
+	a := x.a
+	b := x.b
+
+	if a.Cmp(big.NewFloat(0).SetPrec(a.Prec())) > 0 {
+		f.Arg(x)
+	} else if a.Cmp(big.NewFloat(0).SetPrec(a.Prec())) < 0 &&
+		b.Cmp(big.NewFloat(0).SetPrec(b.Prec())) >= 0 {
+		f.Arg(x)
+		f.a.Add(f.a, bigfloat.PI(a.Prec()))
+	} else if a.Cmp(big.NewFloat(0).SetPrec(a.Prec())) < 0 &&
+		b.Cmp(big.NewFloat(0).SetPrec(b.Prec())) < 0 {
+		f.Arg(x)
+		f.a.Sub(f.a, bigfloat.PI(f.a.Prec()))
+	} else {
+		f.Arg(x)
+	}
+
+	return f
+}
+
 // Arg computes arg(x + yi) = tan-1(y/x)
 // https://mathworld.wolfram.com/ComplexArgument.html
 func (f *Float) Arg(x *Float) *Float {
@@ -162,6 +185,25 @@ func (f *Float) Exp(x *Float) *Float {
 	sin := bigfloat.Sin(x.b)
 	f.a.Mul(exp, cos)
 	f.b.Mul(exp, sin)
+	return f
+}
+
+// Log computes the natural log of x
+// https://en.wikipedia.org/wiki/Complex_logarithm
+func (f *Float) Log(x *Float) *Float {
+	a := x.a
+	aa := big.NewFloat(0).SetPrec(a.Prec())
+	aa.Mul(a, a)
+	b := x.b
+	bb := big.NewFloat(0).SetPrec(b.Prec())
+	bb.Mul(b, b)
+	real := big.NewFloat(0).SetPrec(a.Prec())
+	real.Add(aa, bb)
+	real = bigfloat.Log(bigfloat.Sqrt(real))
+	y := NewFloat(big.NewFloat(0).SetPrec(a.Prec()), big.NewFloat(0).SetPrec(b.Prec()))
+	y.Atan2(x)
+	f.a = real
+	f.b = y.a
 	return f
 }
 

@@ -74,6 +74,43 @@ func TestImaginary_Exp(t *testing.T) {
 	}
 }
 
+func TestImaginary_Log(t *testing.T) {
+	a := NewFloat(big.NewFloat(1), big.NewFloat(1))
+	a.Log(a)
+	t.Log(a.String())
+	if a.String() != "0.3465735903 + 0.7853981634i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(1), big.NewFloat(0))
+	a.Log(a)
+	t.Log(a.String())
+	if a.String() != "0 + 0i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(0), big.NewFloat(1))
+	a.Log(a)
+	t.Log(a.String())
+	if a.String() != "0 + 1.570796327i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(1), big.NewFloat(2))
+	a.Log(a)
+	t.Log(a.String())
+	if a.String() != "0.8047189562 + 1.107148718i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(2), big.NewFloat(1))
+	a.Log(a)
+	t.Log(a.String())
+	if a.String() != "0.8047189562 + 0.463647609i" {
+		t.Fatal("invalid result")
+	}
+}
+
 func TestImaginary_Pow(t *testing.T) {
 	a := NewFloat(big.NewFloat(2).SetPrec(64), big.NewFloat(1).SetPrec(64))
 	b := NewFloat(big.NewFloat(2).SetPrec(64), big.NewFloat(1).SetPrec(64))
