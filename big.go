@@ -154,6 +154,17 @@ func (f *Float) Arg(x *Float) *Float {
 	return f
 }
 
+// Exp computes e^x for a complex number
+// https://www.wolframalpha.com/input/?i=e%5E%28x+%2B+yi%29
+func (f *Float) Exp(x *Float) *Float {
+	exp := bigfloat.Exp(x.a)
+	cos := bigfloat.Cos(x.b)
+	sin := bigfloat.Sin(x.b)
+	f.a.Mul(exp, cos)
+	f.b.Mul(exp, sin)
+	return f
+}
+
 // Pow computes x**y
 // https://mathworld.wolfram.com/ComplexExponentiation.html
 func (f *Float) Pow(x *Float, y *Float) *Float {
