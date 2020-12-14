@@ -337,6 +337,13 @@ func (r *Rational) Div(a, b *Rational) *Rational {
 	return r
 }
 
+// Neg negates the rational
+func (r *Rational) Neg(a *Rational) *Rational {
+	r.A.Neg(a.A)
+	r.B.Neg(a.B)
+	return r
+}
+
 // String returns a string of the imaginary number
 func (r *Rational) String() string {
 	return r.A.String() + " + " + r.B.String() + "i"
