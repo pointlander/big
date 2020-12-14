@@ -259,6 +259,18 @@ func (f *Float) Pow(x *Float, y *Float) *Float {
 	return f
 }
 
+// SetRat sets the value to a rational
+func (f *Float) SetRat(r *Rational) {
+	f.a.SetRat(r.a)
+	f.b.SetRat(r.b)
+}
+
+// Rat stores the float in a rational
+func (f *Float) Rat(r *Rational) {
+	f.a.Rat(r.a)
+	f.b.Rat(r.b)
+}
+
 // String returns a string of the imaginary number
 func (f *Float) String() string {
 	return f.a.String() + " + " + f.b.String() + "i"
