@@ -1,4 +1,4 @@
-module github.com/pointlander/big
+module github.com/pointlander/c0mpl3x
 
 go 1.15
 
