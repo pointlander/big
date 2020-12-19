@@ -213,6 +213,31 @@ func (f *Float) Cos(x *Float) *Float {
 	return f
 }
 
+// Sin computes sine of a number
+// https://www.wolframalpha.com/input/?i=sin%28x+%2B+yi%29
+func (f *Float) Sin(x *Float) *Float {
+	y1 := big.NewFloat(0).SetPrec(x.B.Prec())
+	y1.Set(x.B)
+	x1 := big.NewFloat(0).SetPrec(x.A.Prec())
+	x1.Set(x.A)
+	x1.Neg(x1)
+	a := NewFloat(y1, x1)
+
+	y2 := big.NewFloat(0).SetPrec(x.B.Prec())
+	y2.Set(x.B)
+	y2.Neg(y2)
+	x2 := big.NewFloat(0).SetPrec(x.A.Prec())
+	x2.Set(x.A)
+	b := NewFloat(y2, x2)
+
+	a.Exp(a)
+	b.Exp(b)
+	a.Sub(a, b)
+	x3 := NewFloat(big.NewFloat(0).SetPrec(x.A.Prec()), big.NewFloat(.5).SetPrec(x.B.Prec()))
+	f.Mul(a, x3)
+	return f
+}
+
 // Log computes the natural log of x
 // https://en.wikipedia.org/wiki/Complex_logarithm
 func (f *Float) Log(x *Float) *Float {

@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-func TestAbs(t *testing.T) {
+func TestFloat_Abs(t *testing.T) {
 	a := NewFloat(big.NewFloat(5), big.NewFloat(5))
 	a.Abs(a)
 	t.Log(a.String())
@@ -18,7 +18,7 @@ func TestAbs(t *testing.T) {
 	}
 }
 
-func TestImaginary_Div(t *testing.T) {
+func TestFloat_Div(t *testing.T) {
 	a := NewFloat(big.NewFloat(4), big.NewFloat(5))
 	b := NewFloat(big.NewFloat(2), big.NewFloat(6))
 	a.Div(a, b)
@@ -28,7 +28,7 @@ func TestImaginary_Div(t *testing.T) {
 	}
 }
 
-func TestImaginary_Sqrt(t *testing.T) {
+func TestFloat_Sqrt(t *testing.T) {
 	a := NewFloat(big.NewFloat(5), big.NewFloat(12))
 	a.Sqrt(a)
 	t.Log(a.String())
@@ -37,7 +37,7 @@ func TestImaginary_Sqrt(t *testing.T) {
 	}
 }
 
-func TestImaginary_Exp(t *testing.T) {
+func TestFloat_Exp(t *testing.T) {
 	a := NewFloat(big.NewFloat(1), big.NewFloat(1))
 	a.Exp(a)
 	t.Log(a.String())
@@ -74,7 +74,7 @@ func TestImaginary_Exp(t *testing.T) {
 	}
 }
 
-func TestImaginary_Cos(t *testing.T) {
+func TestFloat_Cos(t *testing.T) {
 	a := NewFloat(big.NewFloat(1), big.NewFloat(1))
 	a.Cos(a)
 	t.Log(a.String())
@@ -111,7 +111,44 @@ func TestImaginary_Cos(t *testing.T) {
 	}
 }
 
-func TestImaginary_Log(t *testing.T) {
+func TestFloat_Sin(t *testing.T) {
+	a := NewFloat(big.NewFloat(1), big.NewFloat(1))
+	a.Sin(a)
+	t.Log(a.String())
+	if a.String() != "1.298457581 + 0.6349639148i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(0), big.NewFloat(1))
+	a.Sin(a)
+	t.Log(a.String())
+	if a.String() != "0 + 1.175201194i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(1), big.NewFloat(0))
+	a.Sin(a)
+	t.Log(a.String())
+	if a.String() != "0.8414709848 + 0i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(1), big.NewFloat(2))
+	a.Sin(a)
+	t.Log(a.String())
+	if a.String() != "3.165778513 + 1.959601041i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(2), big.NewFloat(1))
+	a.Sin(a)
+	t.Log(a.String())
+	if a.String() != "1.403119251 + -0.489056259i" {
+		t.Fatal("invalid result")
+	}
+}
+
+func TestFloat_Log(t *testing.T) {
 	a := NewFloat(big.NewFloat(1), big.NewFloat(1))
 	a.Log(a)
 	t.Log(a.String())
@@ -148,7 +185,7 @@ func TestImaginary_Log(t *testing.T) {
 	}
 }
 
-func TestImaginary_Pow(t *testing.T) {
+func TestFloat_Pow(t *testing.T) {
 	a := NewFloat(big.NewFloat(2).SetPrec(64), big.NewFloat(1).SetPrec(64))
 	b := NewFloat(big.NewFloat(2).SetPrec(64), big.NewFloat(1).SetPrec(64))
 	c := NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
