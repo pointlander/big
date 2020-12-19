@@ -74,6 +74,43 @@ func TestImaginary_Exp(t *testing.T) {
 	}
 }
 
+func TestImaginary_Cos(t *testing.T) {
+	a := NewFloat(big.NewFloat(1), big.NewFloat(1))
+	a.Cos(a)
+	t.Log(a.String())
+	if a.String() != "0.8337300251 + -0.9888977058i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(0), big.NewFloat(1))
+	a.Cos(a)
+	t.Log(a.String())
+	if a.String() != "1.543080635 + 0i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(1), big.NewFloat(0))
+	a.Cos(a)
+	t.Log(a.String())
+	if a.String() != "0.5403023059 + 0i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(1), big.NewFloat(2))
+	a.Cos(a)
+	t.Log(a.String())
+	if a.String() != "2.032723007 + -3.051897799i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(2), big.NewFloat(1))
+	a.Cos(a)
+	t.Log(a.String())
+	if a.String() != "-0.6421481247 + -1.068607421i" {
+		t.Fatal("invalid result")
+	}
+}
+
 func TestImaginary_Log(t *testing.T) {
 	a := NewFloat(big.NewFloat(1), big.NewFloat(1))
 	a.Log(a)
