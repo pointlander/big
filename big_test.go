@@ -148,6 +148,43 @@ func TestFloat_Sin(t *testing.T) {
 	}
 }
 
+func TestFloat_Tan(t *testing.T) {
+	a := NewFloat(big.NewFloat(1), big.NewFloat(1))
+	a.Tan(a)
+	t.Log(a.String())
+	if a.String() != "0.2717525853 + 1.083923327i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(0), big.NewFloat(1))
+	a.Tan(a)
+	t.Log(a.String())
+	if a.String() != "0 + 0.761594156i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(1), big.NewFloat(0))
+	a.Tan(a)
+	t.Log(a.String())
+	if a.String() != "1.557407725 + 0i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(1), big.NewFloat(2))
+	a.Tan(a)
+	t.Log(a.String())
+	if a.String() != "0.03381282608 + 1.014793616i" {
+		t.Fatal("invalid result")
+	}
+
+	a = NewFloat(big.NewFloat(2), big.NewFloat(1))
+	a.Tan(a)
+	t.Log(a.String())
+	if a.String() != "-0.2434582012 + 1.166736257i" {
+		t.Fatal("invalid result")
+	}
+}
+
 func TestFloat_Log(t *testing.T) {
 	a := NewFloat(big.NewFloat(1), big.NewFloat(1))
 	a.Log(a)

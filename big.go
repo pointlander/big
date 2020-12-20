@@ -238,6 +238,20 @@ func (f *Float) Sin(x *Float) *Float {
 	return f
 }
 
+// Tan computes tangent of a number
+// https://en.wikipedia.org/wiki/Trigonometric_functions
+func (f *Float) Tan(x *Float) *Float {
+	a := big.NewFloat(0).SetPrec(x.A.Prec())
+	a.Set(x.A)
+	b := big.NewFloat(0).SetPrec(x.B.Prec())
+	b.Set(x.B)
+	y := NewFloat(a, b)
+	x.Sin(x)
+	y.Cos(y)
+	f.Div(x, y)
+	return f
+}
+
 // Log computes the natural log of x
 // https://en.wikipedia.org/wiki/Complex_logarithm
 func (f *Float) Log(x *Float) *Float {
