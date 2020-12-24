@@ -9,6 +9,21 @@ import (
 	"testing"
 )
 
+func TestMatrix_Mul(t *testing.T) {
+	a1 := NewRational(big.NewRat(1, 1), big.NewRat(0, 1))
+	a2 := NewRational(big.NewRat(2, 1), big.NewRat(0, 1))
+	a3 := NewRational(big.NewRat(3, 1), big.NewRat(0, 1))
+	a4 := NewRational(big.NewRat(4, 1), big.NewRat(0, 1))
+	m := Matrix{}
+	m.Values = append(m.Values, []Rational{*a1, *a2})
+	m.Values = append(m.Values, []Rational{*a3, *a4})
+	m.Mul(&m, &m)
+	t.Log(m.String())
+	if m.String() != "[7/1 + 0/1i 10/1 + 0/1i ;15/1 + 0/1i 22/1 + 0/1i ;]" {
+		t.Fatal("invalid result")
+	}
+}
+
 func TestFloat_Abs(t *testing.T) {
 	a := NewFloat(big.NewFloat(5), big.NewFloat(5))
 	a.Abs(a)

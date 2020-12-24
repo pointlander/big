@@ -10,6 +10,42 @@ import (
 	"github.com/ALTree/bigfloat"
 )
 
+// Matrix is a matrix
+type Matrix struct {
+	Values [][]Rational
+}
+
+// Mul multiplies two matricies
+func (m *Matrix) Mul(a, b *Matrix) *Matrix {
+	values := [][]Rational{}
+	for x := 0; x < len(a.Values); x++ {
+		var row []Rational
+		for y := 0; y < len(b.Values[0]); y++ {
+			sum := NewRational(big.NewRat(0, 1), big.NewRat(0, 1))
+			for z := 0; z < len(b.Values); z++ {
+				ab := NewRational(big.NewRat(0, 1), big.NewRat(0, 1))
+				ab.Mul(&a.Values[x][z], &b.Values[z][y])
+				sum.Add(sum, ab)
+			}
+			row = append(row, *sum)
+		}
+		values = append(values, row)
+	}
+	m.Values = values
+	return m
+}
+
+func (m *Matrix) String() string {
+	s := "["
+	for _, row := range m.Values {
+		for _, value := range row {
+			s += value.String() + " "
+		}
+		s += ";"
+	}
+	return s + "]"
+}
+
 // Float is an imaginary number
 type Float struct {
 	A, B *big.Float
