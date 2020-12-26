@@ -15,8 +15,111 @@ type Matrix struct {
 	Values [][]Rational
 }
 
+// Add adds two matricies
+func (m *Matrix) Add(a, b *Matrix) *Matrix {
+	asingular := len(a.Values) == 1 && len(a.Values[0]) == 1
+	bsingular := len(b.Values) == 1 && len(b.Values[0]) == 1
+	if asingular || bsingular {
+		if bsingular {
+			a, b = b, a
+		}
+		value, values := a.Values[0][0], [][]Rational{}
+		for _, b := range b.Values {
+			var row []Rational
+			for _, bb := range b {
+				ab := NewRational(big.NewRat(0, 1), big.NewRat(0, 1))
+				row = append(row, *(ab.Add(&bb, &value)))
+			}
+			values = append(values, row)
+		}
+		m.Values = values
+		return m
+	}
+
+	values := [][]Rational{}
+	for i, b := range b.Values {
+		var row []Rational
+		for j, bb := range b {
+			ab := NewRational(big.NewRat(0, 1), big.NewRat(0, 1))
+			row = append(row, *(ab.Add(&bb, &a.Values[i][j])))
+		}
+		values = append(values, row)
+	}
+	m.Values = values
+	return m
+}
+
+// Sub subtracts two matricies
+func (m *Matrix) Sub(a, b *Matrix) *Matrix {
+	if len(a.Values) == 1 && len(a.Values[0]) == 1 &&
+		len(b.Values) == 1 && len(b.Values[0]) == 1 {
+		aa, bb, values := a.Values[0][0], b.Values[0][0], [][]Rational{}
+		var row []Rational
+		ab := NewRational(big.NewRat(0, 1), big.NewRat(0, 1))
+		row = append(row, *(ab.Sub(&aa, &bb)))
+		values = append(values, row)
+		m.Values = values
+		return m
+	} else if len(a.Values) == 1 && len(a.Values[0]) == 1 {
+		value, values := a.Values[0][0], [][]Rational{}
+		for _, b := range b.Values {
+			var row []Rational
+			for _, bb := range b {
+				ab := NewRational(big.NewRat(0, 1), big.NewRat(0, 1))
+				row = append(row, *(ab.Sub(&value, &bb)))
+			}
+			values = append(values, row)
+		}
+		m.Values = values
+		return m
+	} else if len(b.Values) == 1 && len(b.Values[0]) == 1 {
+		value, values := b.Values[0][0], [][]Rational{}
+		for _, a := range a.Values {
+			var row []Rational
+			for _, aa := range a {
+				ab := NewRational(big.NewRat(0, 1), big.NewRat(0, 1))
+				row = append(row, *(ab.Sub(&aa, &value)))
+			}
+			values = append(values, row)
+		}
+		m.Values = values
+		return m
+	}
+
+	values := [][]Rational{}
+	for i, b := range b.Values {
+		var row []Rational
+		for j, bb := range b {
+			ab := NewRational(big.NewRat(0, 1), big.NewRat(0, 1))
+			row = append(row, *(ab.Sub(&a.Values[i][j], &bb)))
+		}
+		values = append(values, row)
+	}
+	m.Values = values
+	return m
+}
+
 // Mul multiplies two matricies
 func (m *Matrix) Mul(a, b *Matrix) *Matrix {
+	asingular := len(a.Values) == 1 && len(a.Values[0]) == 1
+	bsingular := len(b.Values) == 1 && len(b.Values[0]) == 1
+	if asingular || bsingular {
+		if bsingular {
+			a, b = b, a
+		}
+		value, values := a.Values[0][0], [][]Rational{}
+		for _, b := range b.Values {
+			var row []Rational
+			for _, bb := range b {
+				ab := NewRational(big.NewRat(0, 1), big.NewRat(0, 1))
+				row = append(row, *(ab.Mul(&bb, &value)))
+			}
+			values = append(values, row)
+		}
+		m.Values = values
+		return m
+	}
+
 	values := [][]Rational{}
 	for x := 0; x < len(a.Values); x++ {
 		var row []Rational
@@ -33,6 +136,22 @@ func (m *Matrix) Mul(a, b *Matrix) *Matrix {
 	}
 	m.Values = values
 	return m
+}
+
+// Div divides two matricies
+func (m *Matrix) Div(a, b *Matrix) *Matrix {
+	if len(a.Values) == 1 && len(a.Values[0]) == 1 &&
+		len(b.Values) == 1 && len(b.Values[0]) == 1 {
+		aa, bb, values := a.Values[0][0], b.Values[0][0], [][]Rational{}
+		var row []Rational
+		ab := NewRational(big.NewRat(0, 1), big.NewRat(0, 1))
+		row = append(row, *(ab.Div(&aa, &bb)))
+		values = append(values, row)
+		m.Values = values
+		return m
+	}
+
+	panic("can't divide non 1x1 matrices")
 }
 
 func (m *Matrix) String() string {

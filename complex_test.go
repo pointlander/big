@@ -9,6 +9,86 @@ import (
 	"testing"
 )
 
+func TestMatrix_Add(t *testing.T) {
+	a1 := NewRational(big.NewRat(1, 1), big.NewRat(0, 1))
+	a2 := NewRational(big.NewRat(2, 1), big.NewRat(0, 1))
+	a3 := NewRational(big.NewRat(3, 1), big.NewRat(0, 1))
+	a4 := NewRational(big.NewRat(4, 1), big.NewRat(0, 1))
+	m := Matrix{}
+	m.Values = append(m.Values, []Rational{*a1, *a2})
+	m.Values = append(m.Values, []Rational{*a3, *a4})
+	m.Add(&m, &m)
+	t.Log(m.String())
+	if m.String() != "[2/1 + 0/1i 4/1 + 0/1i ;6/1 + 0/1i 8/1 + 0/1i ;]" {
+		t.Fatal("invalid result")
+	}
+
+	m.Values = [][]Rational{}
+	m.Values = append(m.Values, []Rational{*a1, *a2})
+	m.Values = append(m.Values, []Rational{*a3, *a4})
+
+	n := Matrix{}
+	n.Values = make([][]Rational, 1)
+	n.Values[0] = append(n.Values[0], *a2)
+	m.Add(&m, &n)
+	t.Log(m.String())
+	if m.String() != "[3/1 + 0/1i 4/1 + 0/1i ;5/1 + 0/1i 6/1 + 0/1i ;]" {
+		t.Fatal("invalid result")
+	}
+
+	m.Values = [][]Rational{}
+	m.Values = append(m.Values, []Rational{*a1, *a2})
+	m.Values = append(m.Values, []Rational{*a3, *a4})
+
+	n.Values = make([][]Rational, 1)
+	n.Values[0] = append(n.Values[0], *a2)
+	m.Add(&n, &m)
+	t.Log(m.String())
+	if m.String() != "[3/1 + 0/1i 4/1 + 0/1i ;5/1 + 0/1i 6/1 + 0/1i ;]" {
+		t.Fatal("invalid result")
+	}
+}
+
+func TestMatrix_Sub(t *testing.T) {
+	a1 := NewRational(big.NewRat(1, 1), big.NewRat(0, 1))
+	a2 := NewRational(big.NewRat(2, 1), big.NewRat(0, 1))
+	a3 := NewRational(big.NewRat(3, 1), big.NewRat(0, 1))
+	a4 := NewRational(big.NewRat(4, 1), big.NewRat(0, 1))
+	m := Matrix{}
+	m.Values = append(m.Values, []Rational{*a1, *a2})
+	m.Values = append(m.Values, []Rational{*a3, *a4})
+	m.Sub(&m, &m)
+	t.Log(m.String())
+	if m.String() != "[0/1 + 0/1i 0/1 + 0/1i ;0/1 + 0/1i 0/1 + 0/1i ;]" {
+		t.Fatal("invalid result")
+	}
+
+	m.Values = [][]Rational{}
+	m.Values = append(m.Values, []Rational{*a1, *a2})
+	m.Values = append(m.Values, []Rational{*a3, *a4})
+
+	n := Matrix{}
+	n.Values = make([][]Rational, 1)
+	n.Values[0] = append(n.Values[0], *a2)
+	m.Sub(&m, &n)
+	t.Log(m.String())
+	if m.String() != "[-1/1 + 0/1i 0/1 + 0/1i ;1/1 + 0/1i 2/1 + 0/1i ;]" {
+		t.Fatal("invalid result")
+	}
+
+	m.Values = [][]Rational{}
+	m.Values = append(m.Values, []Rational{*a1, *a2})
+	m.Values = append(m.Values, []Rational{*a3, *a4})
+
+	n.Values = make([][]Rational, 1)
+	n.Values[0] = append(n.Values[0], *a2)
+	m.Sub(&n, &m)
+	t.Log(m.String())
+	if m.String() != "[1/1 + 0/1i 0/1 + 0/1i ;-1/1 + 0/1i -2/1 + 0/1i ;]" {
+		t.Fatal("invalid result")
+	}
+}
+
 func TestMatrix_Mul(t *testing.T) {
 	a1 := NewRational(big.NewRat(1, 1), big.NewRat(0, 1))
 	a2 := NewRational(big.NewRat(2, 1), big.NewRat(0, 1))
@@ -20,6 +100,45 @@ func TestMatrix_Mul(t *testing.T) {
 	m.Mul(&m, &m)
 	t.Log(m.String())
 	if m.String() != "[7/1 + 0/1i 10/1 + 0/1i ;15/1 + 0/1i 22/1 + 0/1i ;]" {
+		t.Fatal("invalid result")
+	}
+
+	m.Values = [][]Rational{}
+	m.Values = append(m.Values, []Rational{*a1, *a2})
+	m.Values = append(m.Values, []Rational{*a3, *a4})
+
+	n := Matrix{}
+	n.Values = make([][]Rational, 1)
+	n.Values[0] = append(n.Values[0], *a2)
+	m.Mul(&m, &n)
+	t.Log(m.String())
+	if m.String() != "[2/1 + 0/1i 4/1 + 0/1i ;6/1 + 0/1i 8/1 + 0/1i ;]" {
+		t.Fatal("invalid result")
+	}
+
+	m.Values = [][]Rational{}
+	m.Values = append(m.Values, []Rational{*a1, *a2})
+	m.Values = append(m.Values, []Rational{*a3, *a4})
+
+	n.Values = make([][]Rational, 1)
+	n.Values[0] = append(n.Values[0], *a2)
+	m.Mul(&n, &m)
+	t.Log(m.String())
+	if m.String() != "[2/1 + 0/1i 4/1 + 0/1i ;6/1 + 0/1i 8/1 + 0/1i ;]" {
+		t.Fatal("invalid result")
+	}
+}
+
+func TestMatrix_Div(t *testing.T) {
+	a1 := NewRational(big.NewRat(1, 1), big.NewRat(0, 1))
+	a2 := NewRational(big.NewRat(2, 1), big.NewRat(0, 1))
+	m := Matrix{}
+	m.Values = append(m.Values, []Rational{*a1})
+	n := Matrix{}
+	n.Values = append(n.Values, []Rational{*a2})
+	m.Div(&m, &n)
+	t.Log(m.String())
+	if m.String() != "[1/2 + 0/1i ;]" {
 		t.Fatal("invalid result")
 	}
 }
