@@ -300,6 +300,14 @@ func (m *Matrix) Pow(x *Matrix, y *Rational, prec uint) *Matrix {
 	})
 }
 
+// Neg negates the rational
+func (m *Matrix) Neg(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		a.Neg(a)
+		return a
+	})
+}
+
 func (m *Matrix) String() string {
 	s := "["
 	for _, row := range m.Values {
