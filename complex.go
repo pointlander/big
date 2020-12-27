@@ -154,6 +154,152 @@ func (m *Matrix) Div(a, b *Matrix) *Matrix {
 	panic("can't divide non 1x1 matrices")
 }
 
+func (m *Matrix) apply(a *Matrix, function func(a *Rational) *Rational) *Matrix {
+	values := [][]Rational{}
+	for _, a := range a.Values {
+		var row []Rational
+		for _, aa := range a {
+			row = append(row, *(function(&aa)))
+		}
+		values = append(values, row)
+	}
+	m.Values = values
+	return m
+}
+
+func (m *Matrix) apply2(a *Matrix, y *Rational, function func(a *Rational, b *Rational) *Rational) *Matrix {
+	values := [][]Rational{}
+	for _, a := range a.Values {
+		var row []Rational
+		for _, aa := range a {
+			row = append(row, *(function(&aa, y)))
+		}
+		values = append(values, row)
+	}
+	m.Values = values
+	return m
+}
+
+// Abs computes the absolute value of the entries of the matrix
+func (m *Matrix) Abs(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		x.Abs(x).Rat(a)
+		return a
+	})
+}
+
+// Conj computes the complex conjugate of a
+func (m *Matrix) Conj(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		x.Conj(x).Rat(a)
+		return a
+	})
+}
+
+// Sqrt computes the square root of the matrix
+func (m *Matrix) Sqrt(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		x.Sqrt(x).Rat(a)
+		return a
+	})
+}
+
+// Atan2 computes atan2 of x
+// https://en.wikipedia.org/wiki/Atan2
+func (m *Matrix) Atan2(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		x.Atan2(x).Rat(a)
+		return a
+	})
+}
+
+// Arg computes arg(x + yi) = tan-1(y/x)
+// https://mathworld.wolfram.com/ComplexArgument.html
+func (m *Matrix) Arg(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		x.Arg(x).Rat(a)
+		return a
+	})
+}
+
+// Exp computes e^x for a complex number
+// https://www.wolframalpha.com/input/?i=e%5E%28x+%2B+yi%29
+func (m *Matrix) Exp(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		x.Exp(x).Rat(a)
+		return a
+	})
+}
+
+// Cos computes cosine of a number
+// https://www.wolframalpha.com/input/?i=cos%28x+%2B+yi%29
+func (m *Matrix) Cos(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		x.Cos(x).Rat(a)
+		return a
+	})
+}
+
+// Sin computes sine of a number
+// https://www.wolframalpha.com/input/?i=sin%28x+%2B+yi%29
+func (m *Matrix) Sin(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		x.Sin(x).Rat(a)
+		return a
+	})
+}
+
+// Tan computes tangent of a number
+// https://en.wikipedia.org/wiki/Trigonometric_functions
+func (m *Matrix) Tan(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		x.Tan(x).Rat(a)
+		return a
+	})
+}
+
+// Log computes the natural log of x
+// https://en.wikipedia.org/wiki/Complex_logarithm
+func (m *Matrix) Log(a *Matrix, prec uint) *Matrix {
+	return m.apply(a, func(a *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		x.Log(x).Rat(a)
+		return a
+	})
+}
+
+// Pow computes x**y
+// https://mathworld.wolfram.com/ComplexExponentiation.html
+func (m *Matrix) Pow(x *Matrix, y *Rational, prec uint) *Matrix {
+	return m.apply2(x, y, func(a, b *Rational) *Rational {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(a)
+		y := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		y.SetRat(b)
+		x.Pow(x, y).Rat(a)
+		return a
+	})
+}
+
 func (m *Matrix) String() string {
 	s := "["
 	for _, row := range m.Values {
