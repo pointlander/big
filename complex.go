@@ -16,6 +16,13 @@ type Matrix struct {
 	Values [][]Rational
 }
 
+// NewMatrix make a new matrix
+func NewMatrix(prec uint) Matrix {
+	return Matrix{
+		Prec: prec,
+	}
+}
+
 // Add adds two matricies
 func (m *Matrix) Add(a, b *Matrix) *Matrix {
 	asingular := len(a.Values) == 1 && len(a.Values[0]) == 1
