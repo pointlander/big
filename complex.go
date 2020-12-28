@@ -308,13 +308,27 @@ func (m *Matrix) Neg(a *Matrix, prec uint) *Matrix {
 	})
 }
 
-func (m *Matrix) String() string {
-	s := "["
-	for _, row := range m.Values {
-		for _, value := range row {
-			s += value.String() + " "
+func (m *Matrix) String(prec uint) string {
+	if len(m.Values) == 1 && len(m.Values[0]) == 1 {
+		x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+		x.SetRat(&m.Values[0][0])
+		return x.String()
+	}
+
+	s, last := "[", len(m.Values)-1
+	for i, row := range m.Values {
+		lastColumn := len(row) - 1
+		for j, value := range row {
+			x := NewFloat(big.NewFloat(0).SetPrec(prec), big.NewFloat(0).SetPrec(prec))
+			x.SetRat(&value)
+			s += x.String()
+			if j < lastColumn {
+				s += " "
+			}
 		}
-		s += ";"
+		if i < last {
+			s += ";"
+		}
 	}
 	return s + "]"
 }
@@ -646,6 +660,9 @@ func (f *Float) Rat(r *Rational) {
 
 // String returns a string of the imaginary number
 func (f *Float) String() string {
+	if f.B.Cmp(big.NewFloat(0)) == 0 {
+		return f.A.String()
+	}
 	return f.A.String() + " + " + f.B.String() + "i"
 }
 
