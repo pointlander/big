@@ -19,7 +19,7 @@ func TestMatrix_Add(t *testing.T) {
 	m.Values = append(m.Values, []Rational{*a3, *a4})
 	m.Add(&m, &m)
 	t.Log(m.String())
-	if m.String() != "[2/1 + 0/1i 4/1 + 0/1i ;6/1 + 0/1i 8/1 + 0/1i ;]" {
+	if m.String() != "[2 4;6 8]" {
 		t.Fatal("invalid result")
 	}
 
@@ -32,7 +32,7 @@ func TestMatrix_Add(t *testing.T) {
 	n.Values[0] = append(n.Values[0], *a2)
 	m.Add(&m, &n)
 	t.Log(m.String())
-	if m.String() != "[3/1 + 0/1i 4/1 + 0/1i ;5/1 + 0/1i 6/1 + 0/1i ;]" {
+	if m.String() != "[3 4;5 6]" {
 		t.Fatal("invalid result")
 	}
 
@@ -44,7 +44,7 @@ func TestMatrix_Add(t *testing.T) {
 	n.Values[0] = append(n.Values[0], *a2)
 	m.Add(&n, &m)
 	t.Log(m.String())
-	if m.String() != "[3/1 + 0/1i 4/1 + 0/1i ;5/1 + 0/1i 6/1 + 0/1i ;]" {
+	if m.String() != "[3 4;5 6]" {
 		t.Fatal("invalid result")
 	}
 }
@@ -59,7 +59,7 @@ func TestMatrix_Sub(t *testing.T) {
 	m.Values = append(m.Values, []Rational{*a3, *a4})
 	m.Sub(&m, &m)
 	t.Log(m.String())
-	if m.String() != "[0/1 + 0/1i 0/1 + 0/1i ;0/1 + 0/1i 0/1 + 0/1i ;]" {
+	if m.String() != "[0 0;0 0]" {
 		t.Fatal("invalid result")
 	}
 
@@ -72,7 +72,7 @@ func TestMatrix_Sub(t *testing.T) {
 	n.Values[0] = append(n.Values[0], *a2)
 	m.Sub(&m, &n)
 	t.Log(m.String())
-	if m.String() != "[-1/1 + 0/1i 0/1 + 0/1i ;1/1 + 0/1i 2/1 + 0/1i ;]" {
+	if m.String() != "[-1 0;1 2]" {
 		t.Fatal("invalid result")
 	}
 
@@ -84,7 +84,7 @@ func TestMatrix_Sub(t *testing.T) {
 	n.Values[0] = append(n.Values[0], *a2)
 	m.Sub(&n, &m)
 	t.Log(m.String())
-	if m.String() != "[1/1 + 0/1i 0/1 + 0/1i ;-1/1 + 0/1i -2/1 + 0/1i ;]" {
+	if m.String() != "[1 0;-1 -2]" {
 		t.Fatal("invalid result")
 	}
 }
@@ -99,7 +99,7 @@ func TestMatrix_Mul(t *testing.T) {
 	m.Values = append(m.Values, []Rational{*a3, *a4})
 	m.Mul(&m, &m)
 	t.Log(m.String())
-	if m.String() != "[7/1 + 0/1i 10/1 + 0/1i ;15/1 + 0/1i 22/1 + 0/1i ;]" {
+	if m.String() != "[7 10;15 22]" {
 		t.Fatal("invalid result")
 	}
 
@@ -112,7 +112,7 @@ func TestMatrix_Mul(t *testing.T) {
 	n.Values[0] = append(n.Values[0], *a2)
 	m.Mul(&m, &n)
 	t.Log(m.String())
-	if m.String() != "[2/1 + 0/1i 4/1 + 0/1i ;6/1 + 0/1i 8/1 + 0/1i ;]" {
+	if m.String() != "[2 4;6 8]" {
 		t.Fatal("invalid result")
 	}
 
@@ -124,7 +124,7 @@ func TestMatrix_Mul(t *testing.T) {
 	n.Values[0] = append(n.Values[0], *a2)
 	m.Mul(&n, &m)
 	t.Log(m.String())
-	if m.String() != "[2/1 + 0/1i 4/1 + 0/1i ;6/1 + 0/1i 8/1 + 0/1i ;]" {
+	if m.String() != "[2 4;6 8]" {
 		t.Fatal("invalid result")
 	}
 }
@@ -138,7 +138,7 @@ func TestMatrix_Div(t *testing.T) {
 	n.Values = append(n.Values, []Rational{*a2})
 	m.Div(&m, &n)
 	t.Log(m.String())
-	if m.String() != "[1/2 + 0/1i ;]" {
+	if m.String() != "0.5" {
 		t.Fatal("invalid result")
 	}
 }
@@ -147,7 +147,7 @@ func TestFloat_Abs(t *testing.T) {
 	a := NewFloat(big.NewFloat(5), big.NewFloat(5))
 	a.Abs(a)
 	t.Log(a.String())
-	if a.String() != "7.071067812 + 0i" {
+	if a.String() != "7.071067812" {
 		t.Fatal("invalid result")
 	}
 }
@@ -189,7 +189,7 @@ func TestFloat_Exp(t *testing.T) {
 	a = NewFloat(big.NewFloat(1), big.NewFloat(0))
 	a.Exp(a)
 	t.Log(a.String())
-	if a.String() != "2.718281828 + 0i" {
+	if a.String() != "2.718281828" {
 		t.Fatal("invalid result")
 	}
 
@@ -219,14 +219,14 @@ func TestFloat_Cos(t *testing.T) {
 	a = NewFloat(big.NewFloat(0), big.NewFloat(1))
 	a.Cos(a)
 	t.Log(a.String())
-	if a.String() != "1.543080635 + 0i" {
+	if a.String() != "1.543080635" {
 		t.Fatal("invalid result")
 	}
 
 	a = NewFloat(big.NewFloat(1), big.NewFloat(0))
 	a.Cos(a)
 	t.Log(a.String())
-	if a.String() != "0.5403023059 + 0i" {
+	if a.String() != "0.5403023059" {
 		t.Fatal("invalid result")
 	}
 
@@ -263,7 +263,7 @@ func TestFloat_Sin(t *testing.T) {
 	a = NewFloat(big.NewFloat(1), big.NewFloat(0))
 	a.Sin(a)
 	t.Log(a.String())
-	if a.String() != "0.8414709848 + 0i" {
+	if a.String() != "0.8414709848" {
 		t.Fatal("invalid result")
 	}
 
@@ -300,7 +300,7 @@ func TestFloat_Tan(t *testing.T) {
 	a = NewFloat(big.NewFloat(1), big.NewFloat(0))
 	a.Tan(a)
 	t.Log(a.String())
-	if a.String() != "1.557407725 + 0i" {
+	if a.String() != "1.557407725" {
 		t.Fatal("invalid result")
 	}
 
@@ -330,7 +330,7 @@ func TestFloat_Log(t *testing.T) {
 	a = NewFloat(big.NewFloat(1), big.NewFloat(0))
 	a.Log(a)
 	t.Log(a.String())
-	if a.String() != "0 + 0i" {
+	if a.String() != "0" {
 		t.Fatal("invalid result")
 	}
 
@@ -380,7 +380,7 @@ func TestFloat_Pow(t *testing.T) {
 	c = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
 	c.Pow(a, b)
 	t.Log(c.String())
-	if c.String() != "0.2078795764 + 0i" {
+	if c.String() != "0.2078795764" {
 		t.Fatal("invalid result")
 	}
 
@@ -389,7 +389,7 @@ func TestFloat_Pow(t *testing.T) {
 	c = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
 	c.Pow(a, b)
 	t.Log(c.String())
-	if c.String() != "1 + 0i" {
+	if c.String() != "1" {
 		t.Fatal("invalid result")
 	}
 
@@ -398,7 +398,7 @@ func TestFloat_Pow(t *testing.T) {
 	c = NewFloat(big.NewFloat(0).SetPrec(64), big.NewFloat(0).SetPrec(64))
 	c.Pow(a, b)
 	t.Log(c.String())
-	if c.String() != "+Inf + 0i" {
+	if c.String() != "+Inf" {
 		t.Fatal("invalid result")
 	}
 }
